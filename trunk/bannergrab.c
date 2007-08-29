@@ -65,7 +65,7 @@ const char *program_version = "bannergrab-ng version 1.0\nBy Ian Ventura-Whiting
 
 
 // Colour Console Output...
-#if !defined(__win32__)
+#if !defined(__WIN32__)
 const char *RESET = "[0m";			// DEFAULT
 const char *COL_RED = "[31m";		// RED
 const char *COL_BLUE = "[34m";		// BLUE
