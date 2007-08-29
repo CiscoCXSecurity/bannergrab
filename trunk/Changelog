@@ -1,0 +1,64 @@
+Changelog
+=========
+
+Version: 1.0
+Date   : 29/08/2007
+Author : Ian Ventura-Whiting (Fizz)
+Notes  : First Source Forge release.
+Changes: The following are a list of changes
+         since the previous version:
+            > Fixed bug with HEX output.
+            > Added MS-SQL trigger.
+            > Added LDAP trigger.
+            > Added increased read timeout for MySQL
+            > Added alternative behavior for QOTD,
+              Daytime and Discard.
+            > Added trigger for Echo.
+            > General trigger enhancements.
+            > Added NOSSL compile option.
+
+Version: 0.5
+Date   : 07/08/2007
+Author : Ian Ventura-Whiting (Fizz)
+Changes: The following are a list of changes
+         since the previous version:
+            > Added function to catch signals.
+            > Added read timeout and set default
+              to 3 seconds.
+
+Version: 0.4
+Date   : 06/08/2007
+Author : Ian Ventura-Whiting (Fizz)
+Changes: The following are a list of changes
+         since the previous version:
+            > Added timeout to SSL connection.
+            > Added web site URL to banner.
+            > Improved help text.
+
+Version: 0.3
+Date   : 16/07/2007
+Author : Ian Ventura-Whiting (Fizz)
+Changes: The following are a list of changes
+         since the previous version:
+            > Improved triggers.
+            > Improved performance.
+            > Fixed silly alarm bug.
+            > Added upper limit to fix services
+              such as chargen.
+            > Added support for SSL.
+            > Prints non-printing output as a
+              HEX dump. This option can also be
+              disabled.
+
+Version: 0.2
+Date   : 15/07/2007
+Author : Ian Ventura-Whiting (Fizz)
+Changes: The following are a list of changes
+         since the previous version:
+            > Added triggers
+            > Improved read /write to socket
+
+Version: 0.1
+Date   : 14/07/2007
+Author : Ian Ventura-Whiting (Fizz)
+Notes  : Initial version of bannergrab-ng

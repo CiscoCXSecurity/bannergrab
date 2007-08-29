@@ -1,0 +1,13 @@
+Requirements:
+   OpenSSL library
+
+Build:
+   bannergrab-ng can be built manually using the following
+   command:
+
+      gcc -lssl -o bannergrab bannergrab.c
+
+   To build bannergrab without SSL support, use the following
+   command:
+
+      gcc -DNOSSL -o bannergrab bannergrab.c

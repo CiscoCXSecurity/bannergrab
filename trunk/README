@@ -1,0 +1,115 @@
+Bannergrab - README
+===================
+
+1. Overview
+
+   Bannergrab is a simple tool, designed to collect information
+   from network services. It can do this using two different
+   methods; grab the connection banners and send triggers and
+   collect the responses. Bannergrab defaults to sending
+   triggers.
+
+   Additionally, Bannergrab supports SSL-based services.
+
+
+2. Requirements
+
+   * The GNU C Compiler (to compile it)
+   * OpenSSL libraries (to connect to SSL-based services)
+
+
+3. Compiling from source
+
+   gcc -lssl -o bannergrab bannergrab.c
+
+
+4. Usage
+
+   Bannergrab provides online help using the standard
+   --help command option. However, in its simplist form
+   to grab a banner from a service:
+
+   bannergrab <ip address> <port>
+
+
+5. Triggers
+
+   I like software that is open, you can read my source
+   to discover exactly how bannergrab sends triggers to
+   services. However, for those of you that do not want
+   to go through the code here is a brief description.
+
+   This is of course dependant on the user not simply
+   disabling triggers.
+
+   Bannergrab will look at the port number that the
+   is being used and try to match it to a trigger/set of
+   triggers. It does NOT probe the service to determine
+   this. If a trigger is found for that port then it
+   will use that, otherwise it will use the default one.
+
+   The triggers will be sent one after another and the
+   response captured. It is as simple as that.
+
+   The triggers do the following:
+
+   FTP
+     * Asks for help.
+     * Attempts to login anonymously.
+     * Quits.
+
+   SMTP
+     * Says Hello.
+     * Asks for help.
+     * Attempts to VRFY postmaster.
+     * Attempts to VRFY bannergrab123.
+     * Attempts to EXPN postmaster.
+     * Quits.
+
+   Finger
+     * Attempts to enumerate a few users.
+
+   HTTP(S)
+     * Asks for OPTIONS.
+
+   POP2/3
+     * Quits.
+
+   NNTP
+     * Asks for HELP.
+     * Lists the newsgroups.
+     * Quits.
+
+   FW1 Admin
+     * Attempts to list IPs.
+
+   LDAP(S)
+     * Performs an Anonymous bind.
+     * Gets a list of base Distinguished
+       Names (DN).
+
+   MSSQL
+     * Attempts a login using BannerGrab
+       user.
+
+   MySQL
+     * Waits longer for a MySQL response.
+
+   Discard/Echo
+     * Send echo.
+
+   Chargen/Daytime/QOTD/SSH/VMWare/Printer
+     * Send nothing.
+
+   ALL OTHERS (Default)
+     * Send OPTIONS and ask for HELP.
+
+
+6. License
+
+   This program is covered by the GPL version 2 license.
+   You can get this from loads of places and it should
+   be supplied with this program. If not, look no
+   further than my web site:
+
+   http://www.titania.co.uk
