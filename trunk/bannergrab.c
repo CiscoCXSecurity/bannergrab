@@ -57,10 +57,10 @@ const char *program_banner = "    _                                             
                              "   | |_) | (_| | | | | | | |  __/ | | (_| | | | (_| | |_) |\n"
                              "   |_.__/ \\__,_|_| |_|_| |_|\\___|_|  \\__, |_|  \\__,_|_.__/\n"
                              "                                     |___/     _ __   __ _\n"
-                             "                 Version 1.0             ___ _| '_ \\ / _` |\n"
-                             "                                        |_____| | | | (_| |\n"
-                             "          Ian Ventura-Whiting (Fizz)          |_| |_|\\__, |\n"
-                             "   http://sourceforge.net/projects/bannergrab        |___/\n\n";
+                             "                Version 1.0              ___ _| '_ \\ / _` |\n"
+                             "         Ian Ventura-Whiting (Fizz)     |_____| | | | (_| |\n"
+                             "      http://bannergrab.sourceforge.net       |_| |_|\\__, |\n"
+                             "                                                     |___/\n\n";
 const char *program_version = "bannergrab-ng version 1.0\nBy Ian Ventura-Whiting (Fizz)\n";
 
 
