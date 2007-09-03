@@ -50,6 +50,8 @@
 #define mode_verbose 3
 // Don't send triggers, just connect and disconnect
 #define mode_notrig 4
+// Show supported triggers
+#define mode_showtriggers 5
 
 const char *program_banner = "    _                                                _\n"
                              "   | |__   __ _ _ __  _ __   ___ _ __ __ _ _ __ __ _| |__\n"
@@ -57,11 +59,11 @@ const char *program_banner = "    _                                             
                              "   | |_) | (_| | | | | | | |  __/ | | (_| | | | (_| | |_) |\n"
                              "   |_.__/ \\__,_|_| |_|_| |_|\\___|_|  \\__, |_|  \\__,_|_.__/\n"
                              "                                     |___/     _ __   __ _\n"
-                             "                Version 1.0              ___ _| '_ \\ / _` |\n"
+                             "                Version 2.0              ___ _| '_ \\ / _` |\n"
                              "         Ian Ventura-Whiting (Fizz)     |_____| | | | (_| |\n"
                              "      http://bannergrab.sourceforge.net       |_| |_|\\__, |\n"
                              "                                                     |___/\n\n";
-const char *program_version = "bannergrab-ng version 1.0\nBy Ian Ventura-Whiting (Fizz)\n";
+const char *program_version = "bannergrab-ng version 2.0\nBy Ian Ventura-Whiting (Fizz)\n";
 
 
 // Colour Console Output...
@@ -389,6 +391,7 @@ int main(int argc, char *argv[])
 
 	int timeout = 5;				// Connection timeout
 	int readTimeout = 3;			// Read Timeout
+	int trigger = 0;
 	int verbose = false;
 	int hexOutput = true;
 
@@ -408,14 +411,29 @@ int main(int argc, char *argv[])
 	// SSL Variables...
 	int trySSL = true;				// Try SSL?
 	int cipherStatus = 0;
+	int tempInt2 = 0;
 	SSL *ssl = NULL;
 	SSL_CTX *ctx;
 	BIO *cipherConnectionBio = 0;
+	BIO *stdoutBIO = NULL;
 #endif
 
 	// Get program parameters...
-	if (argc < 3)
+	if (argc < 2)
 		mode = mode_help;
+	else if (argc == 2)
+	{
+		// Show Triggers...
+		if (strcmp("--show-triggers", argv[1]) == 0)
+			mode = mode_showtriggers;
+
+		// Version
+		else if (strcmp("--version", argv[1]) == 0)
+			mode = mode_version;
+
+		else
+			mode = mode_help;
+	}
 	else
 	{
 		for (loop = 1; loop < argc; loop++)
@@ -436,6 +454,10 @@ int main(int argc, char *argv[])
 			else if (strcmp("--no-triggers", argv[loop]) == 0)
 				mode = mode_notrig;
 
+			// Specify a trigger...
+			else if (strncmp("--trigger=", argv[loop], 10) == 0)
+				trigger = loop;
+
 #if !defined(NOSSL)
 			// No SSL...
 			else if (strcmp("--no-ssl", argv[loop]) == 0)
@@ -454,10 +476,6 @@ int main(int argc, char *argv[])
 			else if (strncmp("--read-time=", argv[loop], 12) == 0)
 				readTimeout = atoi(argv[loop] + 12);
 
-			// Version
-			else if (strcmp("--version", argv[loop]) == 0)
-				mode = mode_version;
-
 			// If all else fails...
 			else
 				mode = mode_help;
@@ -473,7 +491,7 @@ int main(int argc, char *argv[])
 
 		case mode_help:
 			printf("%s%s%s", COL_BLUE, program_banner, RESET);
-			printf("bannergrab-ng performs  connection, trigger  and basic service\n");
+			printf("BannerGrab NG performs  connection, trigger  and basic service\n");
 			printf("information collection. There are basic banner grabbing modes,\n");
 			printf("the  first  mode (the  default  one)  sends  triggers  to  the\n");
 			printf("services and performs basic information collection. The second\n");
@@ -485,10 +503,14 @@ int main(int argc, char *argv[])
 #if !defined(NOSSL)
 			printf("  %s--no-triggers%s        Collect only the connection banner,  no\n", COL_GREEN, RESET);
 			printf("                       triggers and no SSL.\n");
+			printf("  %s--trigger=<trigger>%s  Specify  the  trigger  to use.  Specify\n", COL_GREEN, RESET);
+			printf("                       DEFAULT to use the default trigger.\n");
 			printf("  %s--no-ssl%s             Prevent SSL connection creation.\n", COL_GREEN, RESET);
 #else
 			printf("  %s--no-triggers%s        Collect only the connection banner,  no\n", COL_GREEN, RESET);
 			printf("                       triggers.\n");
+			printf("  %s--trigger=<trigger>%s  Specify  the  trigger  to use.  Specify\n", COL_GREEN, RESET);
+			printf("                       DEFAULT to use the default trigger.\n");
 #endif
 			printf("  %s--no-hex%s             Output     containing     non-printable\n", COL_GREEN, RESET);
 			printf("                       characters are  converted to  hex. This\n");
@@ -497,6 +519,7 @@ int main(int argc, char *argv[])
 			printf("  %s--read-time=<secs>%s   Read timeout (default is 3s).\n", COL_GREEN, RESET);
 			printf("  %s--verbose%s            Show additional program details such as\n", COL_GREEN, RESET);
 			printf("                       any errors.\n");
+			printf("  %s--show-triggers%s      Show the supported triggers.\n", COL_GREEN, RESET);
 			printf("  %s--version%s            Show the program version.\n", COL_GREEN, RESET);
 			printf("  %s--help%s               Display the  help text  you are reading\n", COL_GREEN, RESET);
 			printf("                       now.\n\n");
@@ -504,6 +527,19 @@ int main(int argc, char *argv[])
 			printf("  %s%s 127.0.0.1 80%s\n\n", COL_GREEN, argv[0], RESET);
 			break;
 
+
+		// Show Triggers...
+		case mode_showtriggers:
+			printf("%s%s%s", COL_BLUE, program_banner, RESET);
+			printf("%sThe available BannerGrab NG triggers are:%s\n", COL_BLUE, RESET);
+			servicePointer = &service;
+			while (servicePointer->next != 0)
+			{
+				printf("  %s>%s %s (Port: %d)\n", COL_GREEN, RESET, servicePointer->service, servicePointer->port);
+				servicePointer = servicePointer->next;
+			}
+			printf("\n");
+			break;
 
 		// No triggers, just grab the connection response...
 		case mode_notrig:
@@ -540,11 +576,42 @@ int main(int argc, char *argv[])
 			signal(14, timeoutHandler);
 
 			// Get a trigger to use with the port...
-			servicePointer = &service;
-			while ((servicePointer->next != 0) && (servicePointer->port != port))
-				servicePointer = servicePointer->next;
-			if (servicePointer->port != port)
-				servicePointer = &defaultService;
+			// If no trigger is specified...
+			if (trigger == 0)
+			{
+				servicePointer = &service;
+				while ((servicePointer->next != 0) && (servicePointer->port != port))
+					servicePointer = servicePointer->next;
+				if (servicePointer->port != port)
+					servicePointer = &defaultService;
+			}
+			else
+			{
+				// If default trigger is selected...
+				if (strcasecmp("DEFAULT", argv[trigger] + 10) == 0)
+					servicePointer = &defaultService;
+
+				// Search for trigger...
+				else
+				{
+					servicePointer = &service;
+					while ((servicePointer->next != 0) && (strcasecmp(servicePointer->service, argv[trigger] + 10) != 0))
+						servicePointer = servicePointer->next;
+					if (strcasecmp(servicePointer->service, argv[trigger] + 10) != 0)
+					{
+						printf("%sERROR: Could not find the specified trigger!%s\n\n", COL_RED, RESET);
+						printf("%sThe available BannerGrab NG triggers are:%s\n", COL_BLUE, RESET);
+						servicePointer = &service;
+						while (servicePointer->next != 0)
+						{
+							printf("  %s>%s %s (Port: %d)\n", COL_GREEN, RESET, servicePointer->service, servicePointer->port);
+							servicePointer = servicePointer->next;
+						}
+						printf("\n");
+						exit(0);
+					}
+				}
+			}
 
 			// Terminate early for chargen...
 			if (port == 19)
@@ -623,7 +690,7 @@ int main(int argc, char *argv[])
 							if (cipherConnectionBio != NULL)
 							{
 
-								// Connect SSL and BIO
+								// Connect BIO
 								SSL_set_bio(ssl, cipherConnectionBio, cipherConnectionBio);
 
 								// Connect SSL over socket
@@ -632,6 +699,10 @@ int main(int argc, char *argv[])
 								alarm(0);
 								if (cipherStatus == 1)
 								{
+
+									// Stdout BIO
+									stdoutBIO = BIO_new(BIO_s_file());
+									BIO_set_fp(stdoutBIO, stdout, BIO_NOCLOSE);
 
 									// Read the connection banner data
 									memset(buffer ,0 , sizeof(buffer));
@@ -667,7 +738,23 @@ int main(int argc, char *argv[])
 	
 										triggerPointer = triggerPointer->next;
 									}
-	
+
+									// SSL Service Information...
+									printf("\n\n---- 8< -------------------------------------\n");
+									printf("SSL SERVICE INFORMATION\n\n");
+
+									// SSL Default Cipher...
+									printf("Prefered Cipher:\n");
+									printf("  Name: %s\n", SSL_CIPHER_get_name(SSL_get_current_cipher(ssl)));
+									printf("  Bits: %d\n", SSL_CIPHER_get_bits(SSL_get_current_cipher(ssl), &tempInt2));
+									printf("  Protocol: %s\n\n", SSL_CIPHER_get_version(SSL_get_current_cipher(ssl)));
+
+									// SSL Certificate...
+									X509_print(stdoutBIO, SSL_get_peer_certificate(ssl));
+
+									// Free BIO
+									BIO_free(stdoutBIO);
+
 									// Disconnect SSL over socket
 									SSL_shutdown(ssl);
 								}
