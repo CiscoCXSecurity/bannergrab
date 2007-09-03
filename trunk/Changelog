@@ -1,6 +1,25 @@
 Changelog
 =========
 
+Version: 2.0
+Date   : 03/09/2007
+Author : Ian Ventura-Whiting (Fizz)
+Notes  : This version identifies SSL services and
+         provides SSL service information. Use an
+         SSLScanner to determine the supported
+         ciphers, that is not the purpose of this
+         tool. Try http://sslscan.sf.net
+Changes: The following are a list of changes
+         since the previous version:
+            > Added SSL service information
+              feedback.
+            > Added current SSL cipher.
+            > Added SSL service certificate.
+            > Added a show triggers option.
+            > Added User can specify a trigger.
+            > Fixed a minor command parameter
+              parsing issue.
+
 Version: 1.0
 Date   : 29/08/2007
 Author : Ian Ventura-Whiting (Fizz)

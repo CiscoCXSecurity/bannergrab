@@ -9,7 +9,8 @@ Bannergrab - README
    collect the responses. Bannergrab defaults to sending
    triggers.
 
-   Additionally, Bannergrab supports SSL-based services.
+   Additionally, Bannergrab supports SSL-based services and
+   will report on SSL connection characteristics.
 
 
 2. Requirements
@@ -21,6 +22,10 @@ Bannergrab - README
 3. Compiling from source
 
    gcc -lssl -o bannergrab bannergrab.c
+
+   To compile without SSL support...
+
+   gcc -DNOSSL -o bannergrab bannergrab.c
 
 
 4. Usage
@@ -107,7 +112,7 @@ Bannergrab - README
 
 6. License
 
-   This program is covered by the GPL version 2 license.
+   This program is covered by the GPL version 3 license.
    You can get this from loads of places and it should
    be supplied with this program. If not, look no
    further than my web site:
