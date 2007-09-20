@@ -1,6 +1,18 @@
 Changelog
 =========
 
+Version: 3.0
+Date   : 20/09/2007
+Author : Ian Ventura-Whiting (Fizz)
+Notes  : This version adds support for UDP
+         services
+Changes: The following are a list of changes
+         since the previous version:
+            > Added UDP support.
+            > Added NTP trigger.
+            > Added SNMP trigger.
+            > Added NetBIOS-NS trigger.
+
 Version: 2.0
 Date   : 03/09/2007
 Author : Ian Ventura-Whiting (Fizz)

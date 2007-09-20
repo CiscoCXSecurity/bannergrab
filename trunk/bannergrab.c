@@ -59,11 +59,11 @@ const char *program_banner = "    _                                             
                              "   | |_) | (_| | | | | | | |  __/ | | (_| | | | (_| | |_) |\n"
                              "   |_.__/ \\__,_|_| |_|_| |_|\\___|_|  \\__, |_|  \\__,_|_.__/\n"
                              "                                     |___/     _ __   __ _\n"
-                             "                Version 2.0              ___ _| '_ \\ / _` |\n"
+                             "                Version 3.0              ___ _| '_ \\ / _` |\n"
                              "         Ian Ventura-Whiting (Fizz)     |_____| | | | (_| |\n"
                              "      http://bannergrab.sourceforge.net       |_| |_|\\__, |\n"
                              "                                                     |___/\n\n";
-const char *program_version = "bannergrab-ng version 2.0\nBy Ian Ventura-Whiting (Fizz)\n";
+const char *program_version = "bannergrab-ng version 3.0\nBy Ian Ventura-Whiting (Fizz)\n";
 
 
 // Colour Console Output...
@@ -92,6 +92,7 @@ struct serviceConfig
 {
 	int port;						// Usual Service Port
 	const char *service;			// Service Name
+	int tcp;						// TCP service (false == UDP)
 	int show;						// Show the triggers in the output
 	int connectBanner;				// Get a connection banner
 	int ssl;						// Try SSL
@@ -109,6 +110,18 @@ struct triggerConfig trig_ldap  = {14, "\x30\x0c\x02\x01\x01\x60\x07\x02\x01\x03
 
 // FW1 Admin Trigger...
 struct triggerConfig trig_fw1admin = {0, "???\r\n?\r\n", 0};
+
+// SNMP Trigger...
+struct triggerConfig trig_snmp1 = {44, "\x30\x2a\x02\x01\x00\x04\x07\x70\x72\x69\x76\x61\x74\x65\xa0\x1c\x02\x04\xff\xff\xff\xfe\x02\x01\x00\x02\x01\x00\x30\x0e\x30\x0c\x06\x08\x2b\x06\x01\x02\x01\x01\x01\x00\x05\x00", 0};
+struct triggerConfig trig_snmp  = {43, "\x30\x29\x02\x01\x00\x04\x06\x70\x75\x62\x6c\x69\x63\xa0\x1c\x02\x04\xff\xff\xff\xff\x02\x01\x00\x02\x01\x00\x30\x0e\x30\x0c\x06\x08\x2b\x06\x01\x02\x01\x01\x01\x00\x05\x00", &trig_snmp1};
+
+// NetBIOS Name Service (NBNS)
+struct triggerConfig trig_nbns  = {50, "\xa2\x48\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x20\x43\x4b\x41\x41\x41\x41\x41\x41\x41\x41\x41\x41\x41\x41\x41\x41\x41\x41\x41\x41\x41\x41\x41\x41\x41\x41\x41\x41\x41\x41\x41\x41\x00\x00\x21\x00\x01", 0};
+
+// NTP Trigger...
+struct triggerConfig trig_ntp2 = {12, "\x16\x01\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00", 0};
+struct triggerConfig trig_ntp1 = {12, "\x16\x02\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00", &trig_ntp2};
+struct triggerConfig trig_ntp  = {48, "\xe3\x00\x04\xfa\x00\x01\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xca\x9b\xa3\x35\x2d\x7f\x95\x0b", &trig_ntp1};
 
 // NNTP Trigger...
 struct triggerConfig trig_nntp2 = {0, "QUIT\r\n", 0};
@@ -145,34 +158,37 @@ struct triggerConfig trig_echo = {0, "Echo\r\n", 0};
 struct triggerConfig trig_null = {0, "", 0};
 
 
-//                                Port  Description   shw t  shw c  ssl    tm triggers        next
-struct serviceConfig service22 = {9100, "Printer",    false, true,  false, 0, &trig_null,     0};
-struct serviceConfig service21 = {3306, "MySQL",      false, true,  false, 6, &trig_null,     &service22};
-struct serviceConfig service20 = {1433, "MSSQL",      false, false, false, 0, &trig_mssql,    &service21};
-struct serviceConfig service19 = {902,  "VMWare",     false, true,  false, 0, &trig_null,     &service20};
-struct serviceConfig service18 = {636,  "LDAPS",      false, false, true,  0, &trig_ldap,     &service19};
-struct serviceConfig service17 = {631,  "IPP",        false, false, false, 0, &trig_http,     &service18};
-struct serviceConfig service16 = {587,  "Submission", true,  true,  false, 0, &trig_smtp,     &service17};
-struct serviceConfig service15 = {443,  "HTTPS",      false, false, true,  0, &trig_http,     &service16};
-struct serviceConfig service14 = {389,  "LDAP",       false, false, false, 0, &trig_ldap,     &service15};
-struct serviceConfig service13 = {256,  "FW1Admin",   false, true,  false, 0, &trig_fw1admin, &service14};
-struct serviceConfig service12 = {119,  "NNTP",       false, true,  false, 0, &trig_nntp,     &service13};
-struct serviceConfig service11 = {110,  "POP3",       false, true,  false, 0, &trig_pop,      &service12};
-struct serviceConfig service10 = {109,  "POP2",       false, true,  false, 0, &trig_pop,      &service11};
-struct serviceConfig service9  = {80,   "HTTP",       false, false, false, 0, &trig_http,     &service10};
-struct serviceConfig service8  = {79,   "Finger",     false, false, false, 0, &trig_finger,   &service9};
-struct serviceConfig service7  = {25,   "SMTP",       true,  true,  false, 0, &trig_smtp,     &service8};
-struct serviceConfig service6  = {22,   "SSH",        false, true,  false, 0, &trig_null,     &service7};
-struct serviceConfig service5  = {21,   "FTP",        true,  true,  false, 0, &trig_ftp,      &service6};
-struct serviceConfig service4  = {19,   "Chargen",    false, true,  false, 0, &trig_null,     &service5};
-struct serviceConfig service3  = {17,   "QOTD",       false, true,  false, 0, &trig_null,     &service4};
-struct serviceConfig service2  = {13,   "Daytime",    false, true,  false, 0, &trig_null,     &service3};
-struct serviceConfig service1  = {9,    "Discard",    false, false, false, 0, &trig_echo,     &service2};
-struct serviceConfig service   = {7,    "Echo",       true,  false, false, 0, &trig_echo,     &service1};
+//                                Port  Description   tcp    shw t  shw c  ssl    tm triggers        next
+struct serviceConfig service25 = {9100, "Printer",    true,  false, true,  false, 0, &trig_null,     0};
+struct serviceConfig service24 = {3306, "MySQL",      true,  false, true,  false, 6, &trig_null,     &service25};
+struct serviceConfig service23 = {1433, "MSSQL",      true,  false, false, false, 0, &trig_mssql,    &service24};
+struct serviceConfig service22 = {902,  "VMWare",     true,  false, true,  false, 0, &trig_null,     &service23};
+struct serviceConfig service21 = {636,  "LDAPS",      true,  false, false, true,  0, &trig_ldap,     &service22};
+struct serviceConfig service20 = {631,  "IPP",        true,  false, false, false, 0, &trig_http,     &service21};
+struct serviceConfig service19 = {587,  "Submission", true,  true,  true,  false, 0, &trig_smtp,     &service20};
+struct serviceConfig service18 = {443,  "HTTPS",      true,  false, false, true,  0, &trig_http,     &service19};
+struct serviceConfig service17 = {389,  "LDAP",       true,  false, false, false, 0, &trig_ldap,     &service18};
+struct serviceConfig service16 = {256,  "FW1Admin",   true,  false, true,  false, 0, &trig_fw1admin, &service17};
+struct serviceConfig service15 = {161,  "SNMP",       false, false, false, false, 2, &trig_snmp,     &service16};
+struct serviceConfig service14 = {137,  "NetBIOS-NS", false, false, false, false, 2, &trig_nbns,     &service15};
+struct serviceConfig service13 = {123,  "NTP",        false, false, false, false, 2, &trig_ntp,      &service14};
+struct serviceConfig service12 = {119,  "NNTP",       true,  false, true,  false, 0, &trig_nntp,     &service13};
+struct serviceConfig service11 = {110,  "POP3",       true,  false, true,  false, 0, &trig_pop,      &service12};
+struct serviceConfig service10 = {109,  "POP2",       true,  false, true,  false, 0, &trig_pop,      &service11};
+struct serviceConfig service9  = {80,   "HTTP",       true,  false, false, false, 0, &trig_http,     &service10};
+struct serviceConfig service8  = {79,   "Finger",     true,  false, false, false, 0, &trig_finger,   &service9};
+struct serviceConfig service7  = {25,   "SMTP",       true,  true,  true,  false, 0, &trig_smtp,     &service8};
+struct serviceConfig service6  = {22,   "SSH",        true,  false, true,  false, 0, &trig_null,     &service7};
+struct serviceConfig service5  = {21,   "FTP",        true,  true,  true,  false, 0, &trig_ftp,      &service6};
+struct serviceConfig service4  = {19,   "Chargen",    true,  false, true,  false, 0, &trig_null,     &service5};
+struct serviceConfig service3  = {17,   "QOTD",       true,  false, true,  false, 0, &trig_null,     &service4};
+struct serviceConfig service2  = {13,   "Daytime",    true,  false, true,  false, 0, &trig_null,     &service3};
+struct serviceConfig service1  = {9,    "Discard",    true,  false, false, false, 0, &trig_echo,     &service2};
+struct serviceConfig service   = {7,    "Echo",       true,  true,  false, false, 0, &trig_echo,     &service1};
 
 // Default trigger...
 struct triggerConfig trig_default = {0, "OPTIONS / HTTP/1.0\r\n\r\nHELP\r\n", 0};
-struct serviceConfig defaultService = {0, "DEFAULT", false, true, false, 0, &trig_default, 0};
+struct serviceConfig defaultService = {0, "DEFAULT", true, false, true, false, 0, &trig_default, 0};
 
 
 // Timeout Function
@@ -180,6 +196,7 @@ void timeoutHandler()
 {
 	exit(0);
 }
+
 
 // Create a TCP socket
 int tcpConnect(const char *host, int port, int timeout, int verbose)
@@ -233,7 +250,68 @@ int tcpConnect(const char *host, int port, int timeout, int verbose)
 	if(status < 0)
 	{
 		if (verbose == true)
-			printf("%sERROR: Could not open a connection to host %s on port %d.%s\n", COL_RED, host, port, RESET);
+			printf("%sERROR: Could not open a connection to host %s on TCP port %d.%s\n", COL_RED, host, port, RESET);
+		return 0;
+	}
+
+	// Return
+	return socketDescriptor;
+}
+
+
+// Create a UDP socket
+int udpConnect(const char *host, int port, int timeout, int verbose)
+{
+	// Variables...
+	int socketDescriptor;
+	struct sockaddr_in localAddress;
+	struct hostent *hostStruct;
+	struct sockaddr_in serverAddress;
+	int status;
+
+	// Resolve Host Name
+	hostStruct = gethostbyname(host);
+	if (hostStruct == NULL)
+	{
+		if (verbose == true)
+			printf("%sERROR: Could not resolve hostname %s.%s\n", COL_RED, host, RESET);
+		return 0;
+	}
+
+	// Configure Server Address and Port
+	serverAddress.sin_family = hostStruct->h_addrtype;
+	memcpy((char *) &serverAddress.sin_addr.s_addr, hostStruct->h_addr_list[0], hostStruct->h_length);
+	serverAddress.sin_port = htons(port);
+
+	// Create Socket
+	socketDescriptor = socket(AF_INET, SOCK_DGRAM, 0);
+	if(socketDescriptor < 0)
+	{
+		if (verbose == true)
+			printf("%sERROR: Could not open a socket.%s\n", COL_RED, RESET);
+		return 0;
+	}
+
+	// Configure Local Port
+	localAddress.sin_family = AF_INET;
+	localAddress.sin_addr.s_addr = htonl(INADDR_ANY);
+	localAddress.sin_port = htons(0);
+	status = bind(socketDescriptor, (struct sockaddr *) &localAddress, sizeof(localAddress));
+	if(status < 0)
+	{
+		if (verbose == true)
+			printf("%sERROR: Could not bind to port.%s\n", COL_RED, RESET);
+		return 0;
+	}
+
+	// Connect
+	alarm(timeout);
+	status = connect(socketDescriptor, (struct sockaddr *) &serverAddress, sizeof(serverAddress));
+	alarm(0);
+	if(status < 0)
+	{
+		if (verbose == true)
+			printf("%sERROR: Could not open a connection to host %s on UDP port %d.%s\n", COL_RED, host, port, RESET);
 		return 0;
 	}
 
@@ -386,6 +464,7 @@ int main(int argc, char *argv[])
 	// Variables...
 	// Program options...
 	int port = 80;					// The port to test
+	int tcp = true;					// TCP? (false == UDP)
 	int host = 0;					// The host to test
 	int mode = mode_grab;			// The program mode
 
@@ -454,6 +533,10 @@ int main(int argc, char *argv[])
 			else if (strcmp("--no-triggers", argv[loop]) == 0)
 				mode = mode_notrig;
 
+			// UDP...
+			else if (strcmp("--udp", argv[loop]) == 0)
+				tcp = false;
+
 			// Specify a trigger...
 			else if (strncmp("--trigger=", argv[loop], 10) == 0)
 				trigger = loop;
@@ -500,6 +583,8 @@ int main(int argc, char *argv[])
 			printf("%sCommand:%s\n", COL_BLUE, RESET);
 			printf("  %s%s [Options] host port%s\n\n", COL_GREEN, argv[0], RESET);
 			printf("%sOptions:%s\n", COL_BLUE, RESET);
+			printf("  %s--udp%s                Connect  to  a  port  using  UDP.   The\n", COL_GREEN, RESET);
+			printf("                       default is to use TCP.\n");
 #if !defined(NOSSL)
 			printf("  %s--no-triggers%s        Collect only the connection banner,  no\n", COL_GREEN, RESET);
 			printf("                       triggers and no SSL.\n");
@@ -535,7 +620,10 @@ int main(int argc, char *argv[])
 			servicePointer = &service;
 			while (servicePointer->next != 0)
 			{
-				printf("  %s>%s %s (Port: %d)\n", COL_GREEN, RESET, servicePointer->service, servicePointer->port);
+				if (servicePointer->tcp == true)
+					printf("  %s>%s %s (TCP Port: %d)\n", COL_GREEN, RESET, servicePointer->service, servicePointer->port);
+				else
+					printf("  %s>%s %s (UDP Port: %d)\n", COL_GREEN, RESET, servicePointer->service, servicePointer->port);
 				servicePointer = servicePointer->next;
 			}
 			printf("\n");
@@ -550,7 +638,10 @@ int main(int argc, char *argv[])
 			signal(14, timeoutHandler);
 
 			// Connect to port...
-			socketDescriptor = tcpConnect(argv[host], port, timeout, verbose);
+			if (tcp == true)
+				socketDescriptor = tcpConnect(argv[host], port, timeout, verbose);
+			else
+				socketDescriptor = udpConnect(argv[host], port, timeout, verbose);
 			if (socketDescriptor != 0)
 			{
 				if (port == 19)
@@ -595,16 +686,19 @@ int main(int argc, char *argv[])
 				else
 				{
 					servicePointer = &service;
-					while ((servicePointer->next != 0) && (strcasecmp(servicePointer->service, argv[trigger] + 10) != 0))
+					while ((servicePointer->next != 0) && !((strcasecmp(servicePointer->service, argv[trigger] + 10) == 0) && (servicePointer->tcp == tcp)))
 						servicePointer = servicePointer->next;
-					if (strcasecmp(servicePointer->service, argv[trigger] + 10) != 0)
+					if (!((strcasecmp(servicePointer->service, argv[trigger] + 10) == 0) && (servicePointer->tcp == tcp)))
 					{
 						printf("%sERROR: Could not find the specified trigger!%s\n\n", COL_RED, RESET);
 						printf("%sThe available BannerGrab NG triggers are:%s\n", COL_BLUE, RESET);
 						servicePointer = &service;
 						while (servicePointer->next != 0)
 						{
-							printf("  %s>%s %s (Port: %d)\n", COL_GREEN, RESET, servicePointer->service, servicePointer->port);
+							if (servicePointer->tcp == true)
+								printf("  %s>%s %s (TCP Port: %d)\n", COL_GREEN, RESET, servicePointer->service, servicePointer->port);
+							else
+								printf("  %s>%s %s (UDP Port: %d)\n", COL_GREEN, RESET, servicePointer->service, servicePointer->port);
 							servicePointer = servicePointer->next;
 						}
 						printf("\n");
@@ -632,7 +726,10 @@ int main(int argc, char *argv[])
 			{
 
 				// Connect to port...
-				socketDescriptor = tcpConnect(argv[host], port, timeout, verbose);
+				if (tcp == true)
+					socketDescriptor = tcpConnect(argv[host], port, timeout, verbose);
+				else
+					socketDescriptor = udpConnect(argv[host], port, timeout, verbose);
 				if (socketDescriptor != 0)
 				{
 
@@ -670,7 +767,10 @@ int main(int argc, char *argv[])
 			{
 
 				// Connect to port...
-				socketDescriptor = tcpConnect(argv[host], port, timeout, verbose);
+				if (tcp == true)
+					socketDescriptor = tcpConnect(argv[host], port, timeout, verbose);
+				else
+					socketDescriptor = udpConnect(argv[host], port, timeout, verbose);
 				if (socketDescriptor != 0)
 				{
 

@@ -23,7 +23,7 @@ Bannergrab - README
 
    gcc -lssl -o bannergrab bannergrab.c
 
-   To compile without SSL support...
+   To compile without OpenSSL support...
 
    gcc -DNOSSL -o bannergrab bannergrab.c
 
@@ -105,6 +105,18 @@ Bannergrab - README
 
    Chargen/Daytime/QOTD/SSH/VMWare/Printer
      * Send nothing.
+
+   NTP
+     * Queries time
+     * Queries read list
+     * Queries peers
+
+   SNMP
+     * Sends "public" community string
+     * Sends "private" community string
+
+   NetBIOS Name Service
+     * Name query
 
    ALL OTHERS (Default)
      * Send OPTIONS and ask for HELP.
