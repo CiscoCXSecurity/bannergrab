@@ -198,8 +198,8 @@ void timeoutHandler()
 }
 
 
-// Create a TCP socket
-int tcpConnect(const char *host, int port, int timeout, int verbose)
+// Create a TCP or UDP socket
+int netConnect(const char *host, int port, int timeout, int verbose, int tcp)
 {
 	// Variables...
 	int socketDescriptor;
@@ -223,7 +223,10 @@ int tcpConnect(const char *host, int port, int timeout, int verbose)
 	serverAddress.sin_port = htons(port);
 
 	// Create Socket
-	socketDescriptor = socket(AF_INET, SOCK_STREAM, 0);
+	if (tcp == true)
+		socketDescriptor = socket(AF_INET, SOCK_STREAM, 0);
+	else
+		socketDescriptor = socket(AF_INET, SOCK_DGRAM, 0);
 	if(socketDescriptor < 0)
 	{
 		if (verbose == true)
@@ -250,68 +253,7 @@ int tcpConnect(const char *host, int port, int timeout, int verbose)
 	if(status < 0)
 	{
 		if (verbose == true)
-			printf("%sERROR: Could not open a connection to host %s on TCP port %d.%s\n", COL_RED, host, port, RESET);
-		return 0;
-	}
-
-	// Return
-	return socketDescriptor;
-}
-
-
-// Create a UDP socket
-int udpConnect(const char *host, int port, int timeout, int verbose)
-{
-	// Variables...
-	int socketDescriptor;
-	struct sockaddr_in localAddress;
-	struct hostent *hostStruct;
-	struct sockaddr_in serverAddress;
-	int status;
-
-	// Resolve Host Name
-	hostStruct = gethostbyname(host);
-	if (hostStruct == NULL)
-	{
-		if (verbose == true)
-			printf("%sERROR: Could not resolve hostname %s.%s\n", COL_RED, host, RESET);
-		return 0;
-	}
-
-	// Configure Server Address and Port
-	serverAddress.sin_family = hostStruct->h_addrtype;
-	memcpy((char *) &serverAddress.sin_addr.s_addr, hostStruct->h_addr_list[0], hostStruct->h_length);
-	serverAddress.sin_port = htons(port);
-
-	// Create Socket
-	socketDescriptor = socket(AF_INET, SOCK_DGRAM, 0);
-	if(socketDescriptor < 0)
-	{
-		if (verbose == true)
-			printf("%sERROR: Could not open a socket.%s\n", COL_RED, RESET);
-		return 0;
-	}
-
-	// Configure Local Port
-	localAddress.sin_family = AF_INET;
-	localAddress.sin_addr.s_addr = htonl(INADDR_ANY);
-	localAddress.sin_port = htons(0);
-	status = bind(socketDescriptor, (struct sockaddr *) &localAddress, sizeof(localAddress));
-	if(status < 0)
-	{
-		if (verbose == true)
-			printf("%sERROR: Could not bind to port.%s\n", COL_RED, RESET);
-		return 0;
-	}
-
-	// Connect
-	alarm(timeout);
-	status = connect(socketDescriptor, (struct sockaddr *) &serverAddress, sizeof(serverAddress));
-	alarm(0);
-	if(status < 0)
-	{
-		if (verbose == true)
-			printf("%sERROR: Could not open a connection to host %s on UDP port %d.%s\n", COL_RED, host, port, RESET);
+			printf("%sERROR: Could not open a connection to host %s on port %d.%s\n", COL_RED, host, port, RESET);
 		return 0;
 	}
 
@@ -638,10 +580,7 @@ int main(int argc, char *argv[])
 			signal(14, timeoutHandler);
 
 			// Connect to port...
-			if (tcp == true)
-				socketDescriptor = tcpConnect(argv[host], port, timeout, verbose);
-			else
-				socketDescriptor = udpConnect(argv[host], port, timeout, verbose);
+			socketDescriptor = netConnect(argv[host], port, timeout, verbose, tcp);
 			if (socketDescriptor != 0)
 			{
 				if (port == 19)
@@ -726,10 +665,7 @@ int main(int argc, char *argv[])
 			{
 
 				// Connect to port...
-				if (tcp == true)
-					socketDescriptor = tcpConnect(argv[host], port, timeout, verbose);
-				else
-					socketDescriptor = udpConnect(argv[host], port, timeout, verbose);
+				socketDescriptor = netConnect(argv[host], port, timeout, verbose, tcp);
 				if (socketDescriptor != 0)
 				{
 
@@ -767,10 +703,7 @@ int main(int argc, char *argv[])
 			{
 
 				// Connect to port...
-				if (tcp == true)
-					socketDescriptor = tcpConnect(argv[host], port, timeout, verbose);
-				else
-					socketDescriptor = udpConnect(argv[host], port, timeout, verbose);
+				socketDescriptor = netConnect(argv[host], port, timeout, verbose, tcp);
 				if (socketDescriptor != 0)
 				{
 
@@ -872,7 +805,6 @@ int main(int argc, char *argv[])
 				}
 			}
 #endif
-			printf("\n");
 			break;
 	}
 	return 0;
