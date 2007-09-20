@@ -58,11 +58,10 @@ const char *program_banner = "    _                                             
                              "   | '_ \\ / _` | '_ \\| '_ \\ / _ \\ '__/ _` | '__/ _` | '_ \\\n"
                              "   | |_) | (_| | | | | | | |  __/ | | (_| | | | (_| | |_) |\n"
                              "   |_.__/ \\__,_|_| |_|_| |_|\\___|_|  \\__, |_|  \\__,_|_.__/\n"
-                             "                                     |___/     _ __   __ _\n"
-                             "                Version 3.0              ___ _| '_ \\ / _` |\n"
-                             "         Ian Ventura-Whiting (Fizz)     |_____| | | | (_| |\n"
-                             "      http://bannergrab.sourceforge.net       |_| |_|\\__, |\n"
-                             "                                                     |___/\n\n";
+                             "                                     |___/\n"
+                             "                         Version 3.0\n"
+                             "                  Ian Ventura-Whiting (Fizz)\n"
+                             "              http://bannergrab.sourceforge.net\n\n";
 const char *program_version = "bannergrab-ng version 3.0\nBy Ian Ventura-Whiting (Fizz)\n";
 
 
@@ -401,6 +400,41 @@ int readData(int socketDescriptor, int timeout, int earlyTerminate, int hexOutpu
 }
 
 
+// Print a list of triggers...
+void printTriggers()
+{
+	// Variables...
+	struct serviceConfig *servicePointer = 0;
+	int loop;
+
+	// Start info...
+	printf("%sThe available BannerGrab triggers are:%s\n", COL_BLUE, RESET);
+	printf("  %s>%s DEFAULT    (Port: N/A)\n", COL_GREEN, RESET);
+
+	// Loop through services...
+	servicePointer = &service;
+	while (servicePointer->next != 0)
+	{
+		// Service name
+		printf("  %s>%s %s ", COL_GREEN, RESET, servicePointer->service);
+
+		// Print extra space (if needed)...
+		for (loop = strlen(servicePointer->service); loop < 10; loop++)
+			printf(" ");
+
+		// Print port no...
+		if (servicePointer->tcp == true)
+			printf("(TCP Port: %d)\n", servicePointer->port);
+		else
+			printf("(UDP Port: %d)\n", servicePointer->port);
+		servicePointer = servicePointer->next;
+	}
+
+	// Print an extra newline...
+	printf("\n");
+}
+
+
 int main(int argc, char *argv[])
 {
 	// Variables...
@@ -500,6 +534,12 @@ int main(int argc, char *argv[])
 			// Read Timeout...
 			else if (strncmp("--read-time=", argv[loop], 12) == 0)
 				readTimeout = atoi(argv[loop] + 12);
+			else if ((strcmp("-t", argv[loop]) == 0) && (loop + 3 < argc))
+			{
+				loop++;
+				timeout = atoi(argv[loop]);
+				readTimeout = atoi(argv[loop]);
+			}
 
 			// If all else fails...
 			else
@@ -558,17 +598,7 @@ int main(int argc, char *argv[])
 		// Show Triggers...
 		case mode_showtriggers:
 			printf("%s%s%s", COL_BLUE, program_banner, RESET);
-			printf("%sThe available BannerGrab NG triggers are:%s\n", COL_BLUE, RESET);
-			servicePointer = &service;
-			while (servicePointer->next != 0)
-			{
-				if (servicePointer->tcp == true)
-					printf("  %s>%s %s (TCP Port: %d)\n", COL_GREEN, RESET, servicePointer->service, servicePointer->port);
-				else
-					printf("  %s>%s %s (UDP Port: %d)\n", COL_GREEN, RESET, servicePointer->service, servicePointer->port);
-				servicePointer = servicePointer->next;
-			}
-			printf("\n");
+			printTriggers();
 			break;
 
 		// No triggers, just grab the connection response...
@@ -630,17 +660,7 @@ int main(int argc, char *argv[])
 					if (!((strcasecmp(servicePointer->service, argv[trigger] + 10) == 0) && (servicePointer->tcp == tcp)))
 					{
 						printf("%sERROR: Could not find the specified trigger!%s\n\n", COL_RED, RESET);
-						printf("%sThe available BannerGrab NG triggers are:%s\n", COL_BLUE, RESET);
-						servicePointer = &service;
-						while (servicePointer->next != 0)
-						{
-							if (servicePointer->tcp == true)
-								printf("  %s>%s %s (TCP Port: %d)\n", COL_GREEN, RESET, servicePointer->service, servicePointer->port);
-							else
-								printf("  %s>%s %s (UDP Port: %d)\n", COL_GREEN, RESET, servicePointer->service, servicePointer->port);
-							servicePointer = servicePointer->next;
-						}
-						printf("\n");
+						printTriggers();
 						exit(0);
 					}
 				}
