@@ -556,7 +556,7 @@ int main(int argc, char *argv[])
 
 		case mode_help:
 			printf("%s%s%s", COL_BLUE, program_banner, RESET);
-			printf("BannerGrab NG performs  connection, trigger  and basic service\n");
+			printf("BannerGrab  performs  connection,  trigger  and  basic service\n");
 			printf("information collection. There are basic banner grabbing modes,\n");
 			printf("the  first  mode (the  default  one)  sends  triggers  to  the\n");
 			printf("services and performs basic information collection. The second\n");
