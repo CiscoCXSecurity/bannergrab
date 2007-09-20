@@ -12,6 +12,7 @@ Changes: The following are a list of changes
             > Added NTP trigger.
             > Added SNMP trigger.
             > Added NetBIOS-NS trigger.
+            > Removed new line at program end.
 
 Version: 2.0
 Date   : 03/09/2007
