@@ -15,6 +15,19 @@
  *                                                                         *
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.  *
+ *                                                                         *
+ *   In addition, as a special exception, the copyright holders give       *
+ *   permission to link the code of portions of this program with the      *
+ *   OpenSSL library under certain conditions as described in each         *
+ *   individual source file, and distribute linked combinations            *
+ *   including the two.                                                    *
+ *   You must obey the GNU General Public License in all respects          *
+ *   for all of the code used other than OpenSSL.  If you modify           *
+ *   file(s) with this exception, you may extend this exception to your    *
+ *   version of the file(s), but you are not obligated to do so.  If you   *
+ *   do not wish to do so, delete this exception statement from your       *
+ *   version.  If you delete this exception statement from all source      *
+ *   files in the program, then also delete it here.                       *
  ***************************************************************************/
 
 
@@ -59,10 +72,10 @@ const char *program_banner = "    _                                             
                              "   | |_) | (_| | | | | | | |  __/ | | (_| | | | (_| | |_) |\n"
                              "   |_.__/ \\__,_|_| |_|_| |_|\\___|_|  \\__, |_|  \\__,_|_.__/\n"
                              "                                     |___/\n"
-                             "                         Version 3.0\n"
+                             "                         Version 3.1\n"
                              "                  Ian Ventura-Whiting (Fizz)\n"
                              "              http://bannergrab.sourceforge.net\n\n";
-const char *program_version = "bannergrab-ng version 3.0\nBy Ian Ventura-Whiting (Fizz)\n";
+const char *program_version = "bannergrab-ng version 3.1\nBy Ian Ventura-Whiting (Fizz)\n";
 
 
 // Colour Console Output...

@@ -1,6 +1,16 @@
 Changelog
 =========
 
+Version: 3.1
+Date   : 25/09/2007
+Author : Ian Ventura-Whiting (Fizz)
+Changes: The following are a list of changes
+         since the previous version:
+            > An exception added to the license
+              to make it BINARY compatible with
+              OpenSSL. Makes it easier for
+              packagers.
+
 Version: 3.0
 Date   : 20/09/2007
 Author : Ian Ventura-Whiting (Fizz)
