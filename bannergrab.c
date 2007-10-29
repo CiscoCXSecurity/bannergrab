@@ -72,10 +72,10 @@ const char *program_banner = "    _                                             
                              "   | |_) | (_| | | | | | | |  __/ | | (_| | | | (_| | |_) |\n"
                              "   |_.__/ \\__,_|_| |_|_| |_|\\___|_|  \\__, |_|  \\__,_|_.__/\n"
                              "                                     |___/\n"
-                             "                         Version 3.1\n"
+                             "                         Version 3.2\n"
                              "                  Ian Ventura-Whiting (Fizz)\n"
                              "              http://bannergrab.sourceforge.net\n\n";
-const char *program_version = "bannergrab-ng version 3.1\nBy Ian Ventura-Whiting (Fizz)\n";
+const char *program_version = "bannergrab-ng version 3.2\nBy Ian Ventura-Whiting (Fizz)\n";
 
 
 // Colour Console Output...
@@ -774,7 +774,9 @@ int main(int argc, char *argv[])
 									memset(buffer ,0 , sizeof(buffer));
 									if (servicePointer->connectBanner == true)
 									{
+										alarm(timeout);
 										readTotal = SSL_read(ssl, buffer, sizeof(buffer -1));
+										alarm(0);
 										if (readTotal > 0)
 											printData(buffer, readTotal, hexOutput);
 									}
@@ -783,7 +785,7 @@ int main(int argc, char *argv[])
 									triggerPointer = servicePointer->trigger;
 									while (triggerPointer != 0)
 									{
-	
+
 										// Send trigger...
 										if (triggerPointer->size == 0)
 											SSL_write(ssl, triggerPointer->trigger, strlen(triggerPointer->trigger));
@@ -791,7 +793,7 @@ int main(int argc, char *argv[])
 											SSL_write(ssl, triggerPointer->trigger, triggerPointer->size);
 										if (servicePointer->show == true)
 											printf("%s", triggerPointer->trigger);
-	
+
 										// Read the data
 										readTotal = 1;
 										while (readTotal != 0)
@@ -801,7 +803,7 @@ int main(int argc, char *argv[])
 											if (readTotal > 0)
 												printData(buffer, readTotal, hexOutput);
 										}
-	
+
 										triggerPointer = triggerPointer->next;
 									}
 
