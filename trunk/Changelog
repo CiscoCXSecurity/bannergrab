@@ -1,6 +1,15 @@
 Changelog
 =========
 
+Version: 3.2
+Date   : 29/10/2007
+Author : Ian Ventura-Whiting (Fizz)
+Changes: The following are a list of changes
+         since the previous version:
+            > Added a further SSL read timeout
+              for SSL services that do not want
+              to play fair.
+
 Version: 3.1
 Date   : 25/09/2007
 Author : Ian Ventura-Whiting (Fizz)
