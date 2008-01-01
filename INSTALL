@@ -1,7 +1,11 @@
-Requirements:
+Optional (Recommended) Requirements:
    OpenSSL library
 
-Build:
+Auto Build:
+      make
+      make install                   (as root)
+
+Manual Build:
    bannergrab can be built manually using the following
    command:
 

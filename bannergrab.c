@@ -1,6 +1,6 @@
 /***************************************************************************
  *   bannergrab-ng - next gen banner grabbing tool                         *
- *   Copyright (C) 2007 by Ian Ventura-Whiting (Fizz)                      *
+ *   Copyright (C) 2007-2008 by Ian Ventura-Whiting (Fizz)                 *
  *   fizz@titania.co.uk                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -72,10 +72,10 @@ const char *program_banner = "    _                                             
                              "   | |_) | (_| | | | | | | |  __/ | | (_| | | | (_| | |_) |\n"
                              "   |_.__/ \\__,_|_| |_|_| |_|\\___|_|  \\__, |_|  \\__,_|_.__/\n"
                              "                                     |___/\n"
-                             "                         Version 3.2\n"
-                             "                  Ian Ventura-Whiting (Fizz)\n"
-                             "              http://bannergrab.sourceforge.net\n\n";
-const char *program_version = "bannergrab-ng version 3.2\nBy Ian Ventura-Whiting (Fizz)\n";
+                             "                         Version 3.3\n"
+                             "              http://bannergrab.sourceforge.net\n"
+                             "         Copyright (C) 2007-2008 Ian Ventura-Whiting\n\n";
+const char *program_version = "bannergrab-ng version 3.3\nCopyright (C) 2007-2008 Ian Ventura-Whiting\n";
 
 
 // Colour Console Output...
