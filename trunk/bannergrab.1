@@ -1,0 +1,68 @@
+.TH bannergrab 1 "January 1, 2008"
+.SH NAME
+bannergrab \- a network service banner grabbing tool
+.SH SYNOPSIS
+.B bannergrab
+.RI [ options ] " host port"
+.SH DESCRIPTION
+bannergrab performs connection, trigger and basic service
+information collection. There are basic banner grabbing modes,
+the first mode (the default one) sends triggers to the
+services and performs basic information collection. The second
+mode (--no-triggers), only connects to the service and returns
+the connection banner.
+.br
+By default, if bannergrab has a trigger for the port number that
+is specified, the trigger for that port is used. If no trigger is
+listed for a port, the default one is used. No attempt is made
+to determine the type of service operating on a port.
+.SH OPTIONS
+.TP
+.B \-\-help
+.br
+Show summary of options.
+.TP
+.B \-\-version
+Show version of program.
+.TP
+.B \-\-show\-triggers
+Lists the triggers used by bannergrab.
+.TP
+.B \-\-trigger=<trigger>
+Specify the trigger to use. Specify
+DEFAULT to use the default trigger.
+.TP
+.B \-\-no\-triggers
+Collect only the connection banner, no
+triggers are sent and no SSL.
+.TP
+.B \-\-udp
+.br
+Connect to a port using UDP. The
+default is to use TCP.
+.TP
+.B \-\-no\-ssl
+.br
+Prevent SSL connection creation.
+.TP
+.B \-\-no\-hex
+Output containing non-printable
+characters are converted to hex. This
+option prevents the conversion.
+.TP
+.B \-\-conn\-time=<secs>
+Connection timeout (default is 5s).
+.TP
+.B \-\-read\-time=<secs>
+Read timeout (default is 3s).
+.TP
+.B \-\-verbose
+Show additional program details such as
+any errors.
+.br
+.SH EXAMPLES
+.TP
+bannergrab 127.0.0.1 80
+.br
+.SH AUTHOR
+bannergrab was written by Ian Ventura-Whiting <fizz@titania.co.uk>.
