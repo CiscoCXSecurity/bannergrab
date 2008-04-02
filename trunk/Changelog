@@ -1,6 +1,13 @@
 Changelog
 =========
 
+Version: 3.4
+Date   : 31/03/2008
+Author : Ian Ventura-Whiting (Fizz)
+Changes: The following are a list of changes
+         since the previous version:
+            > Added Telnet trigger
+
 Version: 3.3
 Date   : 01/01/2008
 Author : Ian Ventura-Whiting (Fizz)
