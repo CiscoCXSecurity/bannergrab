@@ -72,10 +72,10 @@ const char *program_banner = "    _                                             
                              "   | |_) | (_| | | | | | | |  __/ | | (_| | | | (_| | |_) |\n"
                              "   |_.__/ \\__,_|_| |_|_| |_|\\___|_|  \\__, |_|  \\__,_|_.__/\n"
                              "                                     |___/\n"
-                             "                         Version 3.3\n"
+                             "                         Version 3.4\n"
                              "              http://bannergrab.sourceforge.net\n"
                              "         Copyright (C) 2007-2008 Ian Ventura-Whiting\n\n";
-const char *program_version = "bannergrab-ng version 3.3\nCopyright (C) 2007-2008 Ian Ventura-Whiting\n";
+const char *program_version = "bannergrab-ng version 3.4\nCopyright (C) 2007-2008 Ian Ventura-Whiting\n";
 
 
 // Colour Console Output...
@@ -157,6 +157,10 @@ struct triggerConfig trig_smtp2 = {0, "VRFY postmaster\r\n", &trig_smtp3};
 struct triggerConfig trig_smtp1 = {0, "HELP\r\n", &trig_smtp2};
 struct triggerConfig trig_smtp  = {0, "HELO bannergrab.com\r\n", &trig_smtp1};
 
+// Telnet Trigger...
+struct triggerConfig trig_telnet1 = {0, "\r", 0};
+struct triggerConfig trig_telnet  = {0, "\r", &trig_telnet1};
+
 // FTP Trigger...
 struct triggerConfig trig_ftp3 = {0, "QUIT\n", 0};
 struct triggerConfig trig_ftp2 = {0, "PASS banner@grab.com\n", &trig_ftp3};
@@ -171,25 +175,26 @@ struct triggerConfig trig_null = {0, "", 0};
 
 
 //                                Port  Description   tcp    shw t  shw c  ssl    tm triggers        next
-struct serviceConfig service25 = {9100, "Printer",    true,  false, true,  false, 0, &trig_null,     0};
-struct serviceConfig service24 = {3306, "MySQL",      true,  false, true,  false, 6, &trig_null,     &service25};
-struct serviceConfig service23 = {1433, "MSSQL",      true,  false, false, false, 0, &trig_mssql,    &service24};
-struct serviceConfig service22 = {902,  "VMWare",     true,  false, true,  false, 0, &trig_null,     &service23};
-struct serviceConfig service21 = {636,  "LDAPS",      true,  false, false, true,  0, &trig_ldap,     &service22};
-struct serviceConfig service20 = {631,  "IPP",        true,  false, false, false, 0, &trig_http,     &service21};
-struct serviceConfig service19 = {587,  "Submission", true,  true,  true,  false, 0, &trig_smtp,     &service20};
-struct serviceConfig service18 = {443,  "HTTPS",      true,  false, false, true,  0, &trig_http,     &service19};
-struct serviceConfig service17 = {389,  "LDAP",       true,  false, false, false, 0, &trig_ldap,     &service18};
-struct serviceConfig service16 = {256,  "FW1Admin",   true,  false, true,  false, 0, &trig_fw1admin, &service17};
-struct serviceConfig service15 = {161,  "SNMP",       false, false, false, false, 2, &trig_snmp,     &service16};
-struct serviceConfig service14 = {137,  "NetBIOS-NS", false, false, false, false, 2, &trig_nbns,     &service15};
-struct serviceConfig service13 = {123,  "NTP",        false, false, false, false, 2, &trig_ntp,      &service14};
-struct serviceConfig service12 = {119,  "NNTP",       true,  false, true,  false, 0, &trig_nntp,     &service13};
-struct serviceConfig service11 = {110,  "POP3",       true,  false, true,  false, 0, &trig_pop,      &service12};
-struct serviceConfig service10 = {109,  "POP2",       true,  false, true,  false, 0, &trig_pop,      &service11};
-struct serviceConfig service9  = {80,   "HTTP",       true,  false, false, false, 0, &trig_http,     &service10};
-struct serviceConfig service8  = {79,   "Finger",     true,  false, false, false, 0, &trig_finger,   &service9};
-struct serviceConfig service7  = {25,   "SMTP",       true,  true,  true,  false, 0, &trig_smtp,     &service8};
+struct serviceConfig service26 = {9100, "Printer",    true,  false, true,  false, 0, &trig_null,     0};
+struct serviceConfig service25 = {3306, "MySQL",      true,  false, true,  false, 6, &trig_null,     &service26};
+struct serviceConfig service24 = {1433, "MSSQL",      true,  false, false, false, 0, &trig_mssql,    &service25};
+struct serviceConfig service23 = {902,  "VMWare",     true,  false, true,  false, 0, &trig_null,     &service24};
+struct serviceConfig service22 = {636,  "LDAPS",      true,  false, false, true,  0, &trig_ldap,     &service23};
+struct serviceConfig service21 = {631,  "IPP",        true,  false, false, false, 0, &trig_http,     &service22};
+struct serviceConfig service20 = {587,  "Submission", true,  true,  true,  false, 0, &trig_smtp,     &service21};
+struct serviceConfig service19 = {443,  "HTTPS",      true,  false, false, true,  0, &trig_http,     &service20};
+struct serviceConfig service18 = {389,  "LDAP",       true,  false, false, false, 0, &trig_ldap,     &service19};
+struct serviceConfig service17 = {256,  "FW1Admin",   true,  false, true,  false, 0, &trig_fw1admin, &service18};
+struct serviceConfig service16 = {161,  "SNMP",       false, false, false, false, 2, &trig_snmp,     &service17};
+struct serviceConfig service15 = {137,  "NetBIOS-NS", false, false, false, false, 2, &trig_nbns,     &service16};
+struct serviceConfig service14 = {123,  "NTP",        false, false, false, false, 2, &trig_ntp,      &service15};
+struct serviceConfig service13 = {119,  "NNTP",       true,  false, true,  false, 0, &trig_nntp,     &service14};
+struct serviceConfig service12 = {110,  "POP3",       true,  false, true,  false, 0, &trig_pop,      &service13};
+struct serviceConfig service11 = {109,  "POP2",       true,  false, true,  false, 0, &trig_pop,      &service12};
+struct serviceConfig service10 = {80,   "HTTP",       true,  false, false, false, 0, &trig_http,     &service11};
+struct serviceConfig service9  = {79,   "Finger",     true,  false, false, false, 0, &trig_finger,   &service10};
+struct serviceConfig service8  = {25,   "SMTP",       true,  true,  true,  false, 0, &trig_smtp,     &service9};
+struct serviceConfig service7  = {23,   "Telnet",     true,  true,  true,  false, 0, &trig_telnet,   &service8};
 struct serviceConfig service6  = {22,   "SSH",        true,  false, true,  false, 0, &trig_null,     &service7};
 struct serviceConfig service5  = {21,   "FTP",        true,  true,  true,  false, 0, &trig_ftp,      &service6};
 struct serviceConfig service4  = {19,   "Chargen",    true,  false, true,  false, 0, &trig_null,     &service5};
