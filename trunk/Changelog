@@ -7,7 +7,7 @@ Author : Ian Ventura-Whiting (Fizz)
 Changes: The following are a list of changes
          since the previous version:
             > Added FW1 Client Authentication trigger
-            > Improved the Telnet trigger
+            > Improved FTP trigger
             > Improved mixed hex and ascii output
 
 Version: 3.4
