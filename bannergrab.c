@@ -72,10 +72,10 @@ const char *program_banner = "    _                                             
                              "   | |_) | (_| | | | | | | |  __/ | | (_| | | | (_| | |_) |\n"
                              "   |_.__/ \\__,_|_| |_|_| |_|\\___|_|  \\__, |_|  \\__,_|_.__/\n"
                              "                                     |___/\n"
-                             "                         Version 3.4\n"
+                             "                         Version 3.5\n"
                              "              http://bannergrab.sourceforge.net\n"
                              "         Copyright (C) 2007-2008 Ian Ventura-Whiting\n\n";
-const char *program_version = "bannergrab-ng version 3.4\nCopyright (C) 2007-2008 Ian Ventura-Whiting\n";
+const char *program_version = "bannergrab-ng version 3.5\nCopyright (C) 2007-2008 Ian Ventura-Whiting\n";
 
 
 // Colour Console Output...
@@ -175,15 +175,16 @@ struct triggerConfig trig_null = {0, "", 0};
 
 
 //                                Port  Description   tcp    shw t  shw c  ssl    tm triggers        next
-struct serviceConfig service26 = {9100, "Printer",    true,  false, true,  false, 0, &trig_null,     0};
-struct serviceConfig service25 = {3306, "MySQL",      true,  false, true,  false, 6, &trig_null,     &service26};
-struct serviceConfig service24 = {1433, "MSSQL",      true,  false, false, false, 0, &trig_mssql,    &service25};
-struct serviceConfig service23 = {902,  "VMWare",     true,  false, true,  false, 0, &trig_null,     &service24};
-struct serviceConfig service22 = {636,  "LDAPS",      true,  false, false, true,  0, &trig_ldap,     &service23};
-struct serviceConfig service21 = {631,  "IPP",        true,  false, false, false, 0, &trig_http,     &service22};
-struct serviceConfig service20 = {587,  "Submission", true,  true,  true,  false, 0, &trig_smtp,     &service21};
-struct serviceConfig service19 = {443,  "HTTPS",      true,  false, false, true,  0, &trig_http,     &service20};
-struct serviceConfig service18 = {389,  "LDAP",       true,  false, false, false, 0, &trig_ldap,     &service19};
+struct serviceConfig service27 = {9100, "Printer",    true,  false, true,  false, 0, &trig_null,     0};
+struct serviceConfig service26 = {3306, "MySQL",      true,  false, true,  false, 6, &trig_null,     &service27};
+struct serviceConfig service25 = {1433, "MSSQL",      true,  false, false, false, 0, &trig_mssql,    &service26};
+struct serviceConfig service24 = {902,  "VMWare",     true,  false, true,  false, 0, &trig_null,     &service25};
+struct serviceConfig service23 = {636,  "LDAPS",      true,  false, false, true,  0, &trig_ldap,     &service24};
+struct serviceConfig service22 = {631,  "IPP",        true,  false, false, false, 0, &trig_http,     &service23};
+struct serviceConfig service21 = {587,  "Submission", true,  true,  true,  false, 0, &trig_smtp,     &service22};
+struct serviceConfig service20 = {443,  "HTTPS",      true,  false, false, true,  0, &trig_http,     &service21};
+struct serviceConfig service19 = {389,  "LDAP",       true,  false, false, false, 0, &trig_ldap,     &service20};
+struct serviceConfig service18 = {259,  "FW1Auth",    true,  false, true,  false, 0, &trig_telnet,   &service19};
 struct serviceConfig service17 = {256,  "FW1Admin",   true,  false, true,  false, 0, &trig_fw1admin, &service18};
 struct serviceConfig service16 = {161,  "SNMP",       false, false, false, false, 2, &trig_snmp,     &service17};
 struct serviceConfig service15 = {137,  "NetBIOS-NS", false, false, false, false, 2, &trig_nbns,     &service16};
