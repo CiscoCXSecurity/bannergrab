@@ -7,7 +7,9 @@ Author : Ian Ventura-Whiting (Fizz)
 Changes: The following are a list of changes
          since the previous version:
             > Added FW1 Client Authentication trigger
+            > Added ISA-KMP trigger
             > Improved FTP trigger
+            > Improved Default trigger
             > Improved mixed hex and ascii output
 
 Version: 3.4
