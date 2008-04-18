@@ -158,8 +158,8 @@ struct triggerConfig trig_smtp1 = {0, "HELP\r\n", &trig_smtp2};
 struct triggerConfig trig_smtp  = {0, "HELO bannergrab.com\r\n", &trig_smtp1};
 
 // Telnet Trigger...
-struct triggerConfig trig_telnet1 = {0, "\r", 0};
-struct triggerConfig trig_telnet  = {0, "\r", &trig_telnet1};
+struct triggerConfig trig_telnet1 = {0, "\r\n", 0};
+struct triggerConfig trig_telnet  = {0, "\r\n", &trig_telnet1};
 
 // FTP Trigger...
 struct triggerConfig trig_ftp3 = {0, "QUIT\n", 0};
@@ -184,7 +184,7 @@ struct serviceConfig service22 = {631,  "IPP",        true,  false, false, false
 struct serviceConfig service21 = {587,  "Submission", true,  true,  true,  false, 0, &trig_smtp,     &service22};
 struct serviceConfig service20 = {443,  "HTTPS",      true,  false, false, true,  0, &trig_http,     &service21};
 struct serviceConfig service19 = {389,  "LDAP",       true,  false, false, false, 0, &trig_ldap,     &service20};
-struct serviceConfig service18 = {259,  "FW1Auth",    true,  false, true,  false, 0, &trig_telnet,   &service19};
+struct serviceConfig service18 = {259,  "FW1Auth",    true,  true,  true,  false, 0, &trig_telnet,   &service19};
 struct serviceConfig service17 = {256,  "FW1Admin",   true,  false, true,  false, 0, &trig_fw1admin, &service18};
 struct serviceConfig service16 = {161,  "SNMP",       false, false, false, false, 2, &trig_snmp,     &service17};
 struct serviceConfig service15 = {137,  "NetBIOS-NS", false, false, false, false, 2, &trig_nbns,     &service16};
@@ -281,6 +281,7 @@ int netConnect(const char *host, int port, int timeout, int verbose, int tcp)
 
 
 // Print data
+int previoushex = true;
 void printData(const unsigned char *buffer, int dataSize, int hexOutput)
 {
 	// Variables...
@@ -313,11 +314,19 @@ void printData(const unsigned char *buffer, int dataSize, int hexOutput)
 
 		// If all the characters are printable...
 		if (containsNonPrintable == false)
+		{
+			previoushex = false;
 			printf("%s", buffer);
+		}
 
 		// If they are not all printabltrlene...
 		else
 		{
+
+			// If previous was not hex, send a line feed first...
+			if (previoushex == false)
+				printf("\n");
+			previoushex = true;
 
 			// Init Variables...
 			memset(asciiOutput, 0, 17);
@@ -398,7 +407,7 @@ int readData(int socketDescriptor, int timeout, int earlyTerminate, int hexOutpu
 		{
 			// Recieve Data
 			memset(buffer ,0 , sizeof(buffer));
-			resultSize = recv(socketDescriptor, buffer, sizeof(buffer) -1, 0);
+			resultSize = recv(socketDescriptor, buffer, MAX_SIZE -1, 0);
 			if (resultSize > 0)
 			{
 				printData(buffer, resultSize, hexOutput);
