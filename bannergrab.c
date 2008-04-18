@@ -162,10 +162,10 @@ struct triggerConfig trig_telnet1 = {0, "\r\n", 0};
 struct triggerConfig trig_telnet  = {0, "\r\n", &trig_telnet1};
 
 // FTP Trigger...
-struct triggerConfig trig_ftp3 = {0, "QUIT\n", 0};
-struct triggerConfig trig_ftp2 = {0, "PASS banner@grab.com\n", &trig_ftp3};
-struct triggerConfig trig_ftp1 = {0, "USER anonymous\n", &trig_ftp2};
-struct triggerConfig trig_ftp  = {0, "HELP\n", &trig_ftp1};
+struct triggerConfig trig_ftp3 = {0, "QUIT\r\n", 0};
+struct triggerConfig trig_ftp2 = {0, "PASS banner@grab.com\r\n", &trig_ftp3};
+struct triggerConfig trig_ftp1 = {0, "USER anonymous\r\n", &trig_ftp2};
+struct triggerConfig trig_ftp  = {0, "HELP\r\n", &trig_ftp1};
 
 // Echo Trigger...
 struct triggerConfig trig_echo = {0, "Echo\r\n", 0};
